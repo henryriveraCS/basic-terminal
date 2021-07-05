@@ -17,6 +17,10 @@ TARGET= basic-terminal
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $(TARGET) $(DEPS) $(OBJ)
 
-#clean out the program itself to recompile later if needed
+#rebuild out the program
 clean:
-	rm -f $(TARGET) *~
+	rm $(TARGET)
+
+#allows you to rebuild the project in one line
+new: clean
+	$(MAKE)
