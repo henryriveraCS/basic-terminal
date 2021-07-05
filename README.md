@@ -14,7 +14,7 @@
 <p>
   Basic Terminal currently has the same functionalities that you would expect from a basic command line terminal such as: 
   <br>
-  <code>ls, cd, cd, pwd, touch, clean, end/exit</code>
+  <code>ls, cd, pwd, touch, clear, end/exit</code><p>You can check more commands by running <code>help</code> or <code>h</code> from within the terminal.</p>
 </p>
   <h3>TODO</h3>
   <p>I will be adding a VIM-like file editor and a few more basic commands such as <code>rm, mv, cp, etc...</code></p>
