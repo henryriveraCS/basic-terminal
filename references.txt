@@ -1,0 +1,5 @@
+file directory:
+	1. https://c-for-dummies.com/blog/?p=3252
+
+FLORIDA VIM:
+	1. https://github.com/vim/vim/blob/master/src/fileio.c
