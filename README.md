@@ -7,7 +7,7 @@
   <li>1. <code>git clone https://github.com/henryriveraCS/basic-terminal</code> </li>
   <li>2. Run <code>make</code> inside the <code>basic-terminal</code> folder</li>
   <li>3. You should have a program called <code>basic-terminal</code> in your directory. Run it by typing <code>./basic-terminal</code></li>
-  <li>4. If you need to rebuild it just run <code>make clean</code> and repeat from <b>step 2</b></li>
+  <li>4. If you need to rebuild it just run <code>make new</code></li>
 </ul>
 
 <h3>CURRENT FUNCTIONALITY</h3>
