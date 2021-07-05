@@ -11,7 +11,7 @@ DEPS = src/fileIO.h src/floridaVim.h
 OBJ = src/terminal.c 
 
 #final program
-TARGET= B-Terminal
+TARGET= basic-terminal
 
 #build B-terminal
 $(TARGET): $(OBJ)
