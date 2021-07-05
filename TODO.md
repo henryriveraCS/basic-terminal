@@ -9,4 +9,7 @@
 	<li>
 		<p>change font scheme to be smoother across all machines</p>
 	</li>
+	<li>
+		<p> create test to make sure nothing breaks when pushing changes</p>
+	</li>
 </ul>
