@@ -6,7 +6,7 @@
 bool loadCmd = true;
 
 //this will be used by main to wait for commands
-void awaitCmd()
+bool awaitCmd()
 {
 	//initialize the variables to be used later
 	char cmd[100];
@@ -47,11 +47,12 @@ void awaitCmd()
 	{
 		scanf("%s", cmd1);
 		char *dir = getCurrentDir();
+		printf("ELIF: \nCWD:%s CMD: %s\n", dir, cmd1);
 		createFile(dir, cmd1);
 	}
 	else if(strcmp(cmd, "end") == 0 || strcmp(cmd, "exit") == 0)
 	{
-		loadCmd = false;	
+		return false;
 	}
 	else if(strcmp(cmd, "help") == 0)
 	{
@@ -62,6 +63,7 @@ void awaitCmd()
 		char msg[] = "Please enter a valid command (help for more info)";
 		errorMsg(msg);
 	}
+	return true;
 }
 
 //used when the program is first initialized
@@ -88,7 +90,7 @@ int main ()
 		printf("[%s]", getCurrentDir());
 		setFontWhite;
 		printf(">");
-		awaitCmd();
+		loadCmd = awaitCmd();
 	}
 	clearIO();
 }
