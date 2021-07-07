@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -I.
 
 #dependancies we need
-DEPS = src/fileIO.h src/floridaVim.h
+DEPS = include/fileIO.h include/floridaVim.h
 
 #what objects are part of final program
 OBJ = src/terminal.c 
