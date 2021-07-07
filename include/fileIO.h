@@ -5,11 +5,12 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <string.h>
 
 //MACROS
 //max path length allowed by win32 api
-#define MAX_PATH 260
+#define WIN_MAX_PATH 260
+//max unix path just for consistency
+#define UNIX_MAX_PATH 520
 
 //font color macros
 #define setFontWhite { printf("\033[0m"); }
@@ -20,6 +21,7 @@
 
 //used to read out whether a file is a direcotry or entry
 struct stat filestat;
+char* cwd;
 
 //used to get the directory as long as you provide the full path
 char *getCurrentDir()
@@ -32,6 +34,7 @@ char *getCurrentDir()
         printf("ERROR GETTING DIRECTORY: %s \n", BUF);
         setFontWhite;
     }
+	cwd = BUF;
     return BUF;
 }
 
@@ -92,13 +95,13 @@ void readFile(const char* cwd, const char* cmd)
     FILE *file;
     char c;
 	//260 char length is the MAX_PATH of windows32 API library
-	char tmp[260];
-	strncat(tmp, cwd, MAX_PATH-1);
-	strncat(tmp, "/", MAX_PATH-1);
-	strncat(tmp, cmd, MAX_PATH-1);
+	char tmp[UNIX_MAX_PATH] = { 0 };
+	strncat(tmp, cwd, (UNIX_MAX_PATH - strlen(cwd) - 1));
+	strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") - 1));
+	strncat(tmp, cmd, (UNIX_MAX_PATH - strlen(cmd) - 1));
 
 	//verify that the array didn't overflow, if it did -> return error
-	if(strlen(tmp) < MAX_PATH)
+	if(strnlen(tmp, UNIX_MAX_PATH) < UNIX_MAX_PATH)
 	{
 		//make sure command wasn't empty
 		if(cmd == NULL)
@@ -108,7 +111,7 @@ void readFile(const char* cwd, const char* cmd)
 		}
 		else
 		{
-			file = fopen((cwd, "/", cmd), "r");
+			file = fopen(tmp, "r");
 			//while you can still read characters in the file(not end of file)
 			while( (c = getc(file)) != EOF)
 			{
@@ -130,15 +133,32 @@ void clearIO()
     system("clear");
 }
 
-void createFile(char* cwd, char* cmd)
+void createFile(const char* cwd, const char* cmd)
 {
     FILE *file;
-    file = fopen((cwd,"/", cmd), "w");
-    fclose(file);
+	char tmp[UNIX_MAX_PATH] = { 0 };
+	printf("\nCMD: %s", cmd);
+	printf("\nCWD: %s", cwd);
+	strncat(tmp, cwd, (UNIX_MAX_PATH - strlen(cwd) -1));
+	strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") -1));
+	strncat(tmp, cmd, (UNIX_MAX_PATH - strlen(cmd) - 1));
+	printf("\nHERE: %s\n", tmp);
+	//verify the path won't overflow
 
-    setFontGreen;
-    printf("CREATED FILE: %s/%s\n", cwd, cmd);
-    setFontWhite;
+	if(strnlen(tmp, UNIX_MAX_PATH) < UNIX_MAX_PATH)
+	{
+    	file = fopen(tmp, "w");
+    	fclose(file);
+
+		setFontGreen;
+		printf("CREATED FILE: %s/%s\n", cwd, cmd);
+		setFontWhite;
+	}
+	else
+	{
+		char *msg = "OVERFLOW ON FILE CREATION";
+		errorMsg(msg);
+	}
 }
 
 
