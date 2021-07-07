@@ -1,13 +1,12 @@
 #include <stdio.h>
 
-#include "floridaVim.h"
-#include "fileIO.h"
+#include "./include/floridaVim.h"
+#include "./include/fileIO.h"
 
-//used to break the loop
 bool loadCmd = true;
 
 //this will be used by main to wait for commands
-const int awaitCmd()
+void awaitCmd()
 {
 	//initialize the variables to be used later
 	char cmd[100];
@@ -20,6 +19,12 @@ const int awaitCmd()
 	{
 		clearIO();	
 	}
+	else if(strcmp(cmd, "cat") == 0)
+	{
+		scanf("%s", cmd1);
+		char *dir = getCurrentDir();
+		readFile(dir, cmd1);
+	}
 	else if(strcmp(cmd, "vim") == 0)
 	{
 		scanf("%s", cmd1);
@@ -31,8 +36,7 @@ const int awaitCmd()
 	}
 	else if(strcmp(cmd, "ls") == 0)
 	{
-		char dir = *getCurrentDir();
-		readDir(dir);
+		readDir();
 	}
 	else if(strcmp(cmd, "cd") == 0)
 	{
@@ -42,7 +46,8 @@ const int awaitCmd()
 	else if(strcmp(cmd, "touch") == 0)
 	{
 		scanf("%s", cmd1);
-		createFile(cmd1);
+		char *dir = getCurrentDir();
+		createFile(dir, cmd1);
 	}
 	else if(strcmp(cmd, "end") == 0 || strcmp(cmd, "exit") == 0)
 	{
@@ -51,11 +56,6 @@ const int awaitCmd()
 	else if(strcmp(cmd, "help") == 0)
 	{
 		printHelp();
-	}
-	else if(strcmp(cmd, "cat") == 0)
-	{
-		scanf("%s", cmd1);
-		readFile(cmd1);
 	}
 	else
 	{
@@ -72,17 +72,23 @@ void init()
 	printf("%s", introMsg);
 }
 
+//used to start the terminal itself
+void initTerminal(char *command)
+{
+	printf("INIT TERMINAL RECEIVED: %s \n", command);
+}
+
 int main ()
 {
 	init();
 	while(loadCmd)
 	{
 		printf("BASIC TERMINAL ");
-		setFontBlue();
+		setFontBlue;
 		printf("[%s]", getCurrentDir());
-		setFontWhite();
+		setFontWhite;
 		printf(">");
-		char cmd = awaitCmd();
+		awaitCmd();
 	}
 	clearIO();
 }
