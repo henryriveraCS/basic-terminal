@@ -19,12 +19,33 @@
 #define setFontGreen { printf("\033[32m"); }
 #define setFontRed { printf("\033[31m"); }
 
+
 //used to read out whether a file is a direcotry or entry
 struct stat filestat;
+//value of cwd is updated by getCurrentDir
 char* cwd;
+//tmp is used to build a path and check whether an overflow state has been reached
+char tmp[UNIX_MAX_PATH];
+
+void clearIO(void)
+{
+    system("clear");
+}
+
+//this is used to build a path
+char *buildPath(const char* dir, const char* fileName)
+{
+	//create array with length of tmpPath
+	char *tmpPTR = tmp;
+	strncat(tmpPTR, dir, (UNIX_MAX_PATH - strlen(cwd) -1));
+	strncat(tmpPTR, "/", (UNIX_MAX_PATH - strlen("/") -1));
+	strncat(tmpPTR, fileName, (UNIX_MAX_PATH - strlen(fileName) - 1));
+	//*tmp = tmpPTR;
+	return tmpPTR;
+}
 
 //used to get the directory as long as you provide the full path
-char *getCurrentDir()
+char *getCurrentDir(void)
 {
     //use buffer to get the path
     char *BUF = getcwd(NULL, 0);
@@ -55,7 +76,7 @@ void printHelp()
 
 
 //reading files in the current dir
-void readDir()
+void readDir(void)
 {
     DIR *folder;
     struct dirent *entry;
@@ -90,28 +111,25 @@ void readDir()
     closedir(folder);
 }
 
-void readFile(const char* cwd, const char* cmd)
+void readFile(const char* dir, const char* fileName)
 {
     FILE *file;
     char c;
+	char *tmp2 = buildPath(dir, fileName);
 	//260 char length is the MAX_PATH of windows32 API library
-	char tmp[UNIX_MAX_PATH] = { 0 };
-	strncat(tmp, cwd, (UNIX_MAX_PATH - strlen(cwd) - 1));
-	strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") - 1));
-	strncat(tmp, cmd, (UNIX_MAX_PATH - strlen(cmd) - 1));
 
 	//verify that the array didn't overflow, if it did -> return error
 	if(strnlen(tmp, UNIX_MAX_PATH) < UNIX_MAX_PATH)
 	{
 		//make sure command wasn't empty
-		if(cmd == NULL)
+		if(dir == NULL)
 		{
 			char message[] = "FILE NOT FOUND, PLEASE MAKE SURE IT EXISTS";
 			errorMsg(message);
 		}
 		else
 		{
-			file = fopen(tmp, "r");
+			file = fopen(tmp2, "r");
 			//while you can still read characters in the file(not end of file)
 			while( (c = getc(file)) != EOF)
 			{
@@ -128,37 +146,56 @@ void readFile(const char* cwd, const char* cmd)
 }
 
 
-void clearIO()
-{
-    system("clear");
-}
 
-void createFile(const char* cwd, const char* cmd)
+void createFile(const char *dir, const char *fileName)
 {
+	char *tmp2 = buildPath(dir, fileName);
     FILE *file;
-	char tmp[UNIX_MAX_PATH] = { 0 };
-	printf("\nCMD: %s", cmd);
-	printf("\nCWD: %s", cwd);
-	strncat(tmp, cwd, (UNIX_MAX_PATH - strlen(cwd) -1));
-	strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") -1));
-	strncat(tmp, cmd, (UNIX_MAX_PATH - strlen(cmd) - 1));
-	printf("\nHERE: %s\n", tmp);
 	//verify the path won't overflow
-
-	if(strnlen(tmp, UNIX_MAX_PATH) < UNIX_MAX_PATH)
+	if(strnlen(tmp2, UNIX_MAX_PATH) < UNIX_MAX_PATH)
 	{
-    	file = fopen(tmp, "w");
-    	fclose(file);
+		file = fopen(tmp2, "w");
+		fclose(file);
 
 		setFontGreen;
-		printf("CREATED FILE: %s/%s\n", cwd, cmd);
+		printf("CREATED FILE: %s\n", tmp2);
 		setFontWhite;
 	}
 	else
 	{
-		char *msg = "OVERFLOW ON FILE CREATION";
+		char *msg = "OVERFLOW ON FILE CREATION, PLEASE MAKE SURE IT'S UNDER MAX_PATH LENGTH";
 		errorMsg(msg);
 	}
+}
+
+/*
+void deleteFile(const char* dir, const char* fileName)
+{
+
+}
+
+void makeDir(const char* dir, const char* dirName)
+{
+
+}
+
+void copyDir(const char* cwd, const char* cmd)
+{
+
+}
+*/
+
+void copyFile(const char *dir, const char *oldFileName, const char *newFileName)
+{
+	/*
+	FILE *oldTmp;
+	FILE *newTmp;
+	*/
+	
+	char *oldTmp = buildPath(dir, oldFileName);
+	char *newTmp = buildPath(dir, newFileName);
+
+	printf("\nOLD: %s\nNEW: %s\n", oldTmp, newTmp);
 }
 
 
