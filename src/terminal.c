@@ -30,7 +30,12 @@ bool awaitCmd()
 		scanf("%s", cmd1);
 		launchVim(cmd1);
 	}
-	//HERE
+	else if(strcmp(cmd, "rm") == 0)
+	{
+		scanf("%s", cmd1);
+		char *dir = getCurrentDir();
+		removeFile(dir, cmd1);
+	}
 	else if(strcmp(cmd, "cp") == 0)
 	{
 		scanf("%s", cmd1);
@@ -93,5 +98,4 @@ int main ()
 		printf(">");
 		loadCmd = awaitCmd();
 	}
-	clearIO();
 }
