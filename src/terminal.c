@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "./include/floridaVim.h"
 #include "./include/fileIO.h"
 
@@ -9,9 +7,11 @@ bool loadCmd = true;
 bool awaitCmd()
 {
 	//initialize the variables to be used later
-	char cmd[100];
-	//has either the directory path OR file name based off cmd
-	char cmd1[100];
+	char cmd[UNIX_MAX_PATH];
+	char cmd1[UNIX_MAX_PATH];
+
+	//used for cmds that need 2 args (E.G: cp originalFile newFile)
+	char cmd2[UNIX_MAX_PATH];
 
 	scanf("%s", cmd);
 	//if value returned is 0 -> it will execute
@@ -30,6 +30,14 @@ bool awaitCmd()
 		scanf("%s", cmd1);
 		launchVim(cmd1);
 	}
+	//HERE
+	else if(strcmp(cmd, "cp") == 0)
+	{
+		scanf("%s", cmd1);
+		scanf("%s", cmd2);
+		char *dir = getCurrentDir();
+		copyFile(dir, cmd1, cmd2);	
+	}
 	else if(strcmp(cmd, "pwd") == 0)
 	{
 		printf("CURRENT DIRECTORY: %s\n", getCurrentDir());
@@ -47,7 +55,6 @@ bool awaitCmd()
 	{
 		scanf("%s", cmd1);
 		char *dir = getCurrentDir();
-		printf("ELIF: \nCWD:%s CMD: %s\n", dir, cmd1);
 		createFile(dir, cmd1);
 	}
 	else if(strcmp(cmd, "end") == 0 || strcmp(cmd, "exit") == 0)
@@ -72,12 +79,6 @@ void init()
 	clearIO();
 	char *introMsg = "BASIC TERMINAL INITLIAZED.\n""TYPE 'help' or 'h' for more info.\n";
 	printf("%s", introMsg);
-}
-
-//used to start the terminal itself
-void initTerminal(char *command)
-{
-	printf("INIT TERMINAL RECEIVED: %s \n", command);
 }
 
 int main ()
