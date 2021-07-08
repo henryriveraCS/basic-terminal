@@ -1,6 +1,6 @@
 <h1> basic-terminal </h1>
 
-<b> Terminal written in C that can run on UNIX/Windows machines. It's basically a more minimal(*buggy*) version of Cygwin. </b>
+<b> Terminal written in C that can run on UNIX machines. It's basically a more minimal(*buggy*) version of Cygwin. </b>
 
 <h2> HOW TO COMPILE/RUN </h2>
 <ul>
