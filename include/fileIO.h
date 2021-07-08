@@ -41,7 +41,7 @@ char *getCurrentDir(void)
     if(BUF == NULL)
     {
         setFontRed;
-        printf("ERROR GETTING DIRECTORY: %s \n", BUF);
+        printf("\nERROR GETTING DIRECTORY: %s \n\n", BUF);
         setFontWhite;
     }
 	cwd = BUF;
@@ -170,12 +170,25 @@ void createFile(const char *dir, const char *fileName)
 	}
 }
 
-/*
-void deleteFile(const char *dir, const char *fileName)
+void removeFile(const char *dir, const char *fileName)
 {
+	char *tmp;
+	tmp = (char *) malloc(UNIX_MAX_PATH);
 
+	buildPath(tmp, dir, fileName);
+	
+	if(remove(tmp) == 0)
+	{
+		printf("DELETED: %s/%s", dir, fileName);
+	}
+	else
+	{
+		char *msg = "ERROR DELETING THE FILE. PLEASE MAKE SURE IT EXISTS";
+		errorMsg(msg);
+	}
 }
 
+/*
 void makeDir(const char *dir, const char *dirName)
 {
 
