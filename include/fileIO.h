@@ -11,7 +11,21 @@
 //max path length allowed by win32 api
 #define WIN_MAX_PATH 260
 //max unix path just for consistency
-#define UNIX_MAX_PATH 520
+#define UNIX_MAX_PATH 1024
+
+//delcare all functions
+void errorMsg(char *error);
+void clearIO(void);
+void printHelp();
+char *getCurrentDir(void);
+void changeDir(char *dir);
+char *buildPath(char *tmp, const char *dir, const char*fileName);
+void createDir(const char *dir, const char *dirName);
+void createFile(const char *dir, const char *fileName);
+void copyFile(const char *dir, const char *oldFileName, const char *newFileName);
+void readFile(const char *dir, const char *fileName);
+void readDir(void);
+void copyDir(const char *cwd, const char *cmd);
 
 //font color macros
 #define setFontWhite { printf("\033[0m"); }
@@ -25,8 +39,6 @@
 struct stat filestat;
 //value of cwd is updated by getCurrentDir
 char* cwd;
-//tmp is used to build a path and check whether an overflow state has been reached
-//char tmp[UNIX_MAX_PATH];
 
 void clearIO(void)
 {
@@ -179,18 +191,36 @@ void removeFile(const char *dir, const char *fileName)
 	
 	if(remove(tmp) == 0)
 	{
-		printf("DELETED: %s/%s", dir, fileName);
+		printf("DELETED: %s/%s\n", dir, fileName);
 	}
 	else
 	{
 		char *msg = "ERROR DELETING THE FILE. PLEASE MAKE SURE IT EXISTS";
 		errorMsg(msg);
 	}
+	free(tmp);
 }
 
-/*
-void makeDir(const char *dir, const char *dirName)
+
+void createDir(const char *dir, const char *dirName)
 {
+	DIR *newDir;
+	char *dirPath;
+	dirPath = (char *) malloc(UNIX_MAX_PATH);
+
+	buildPath(dirPath, dir, dirName);
+	newDir = opendir(dirPath);
+
+	//check if dir exists 
+	if( newDir == NULL )
+	{
+		mkdir(dirName, S_IRWXU);		
+	}
+	else
+	{
+		char *msg = "ERROR CREATING DIRECTORY. MAKE SURE IT DOESN'T ALREADY EXISTS";
+		errorMsg(msg);
+	}
 
 }
 
@@ -198,7 +228,6 @@ void copyDir(const char *cwd, const char *cmd)
 {
 
 }
-*/
 
 void copyFile(const char *dir, const char *oldFileName, const char *newFileName)
 {
