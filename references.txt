@@ -1,11 +1,14 @@
 SECTION A:
-	1. file directory:
+	1. ERROR HANDLING
+		https://en.cppreference.com/w/c/language/main_function
+
+	2. DIRECTORY CODE:
 		https://c-for-dummies.com/blog/?p=3252
 		https://pubs.opengroup.org/onlinepubs/009696699/functions/mkdir.html
 		https://cboard.cprogramming.com/c-programming/143382-implementation-linux-cp-copy-command-c-language.html
 
-	2. FLORIDA VIM:
+	3. FLORIDA VIM:
 		https://github.com/vim/vim/blob/master/src/fileio.c
 
-	3. PERMISSION BITS FOR CREATING FOLDERS/FILES/DIRECTORIES:
+	4. PERMISSION BITS FOR CREATING FOLDERS/FILES/DIRECTORIES:
 		https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
