@@ -39,8 +39,18 @@ bool awaitCmd()
 	else if(strcmp(cmd, "rm") == 0)
 	{
 		scanf("%s", cmd1);
-		char *dir = getCurrentDir();
-		removeFile(dir, cmd1);
+		//check if cmd1 is rm -d (which will instead delete a directory
+		if(strcmp(cmd1, "-d") == 0)
+		{
+			scanf("%s", cmd2);
+			char *dir = getCurrentDir();
+			removeDir(dir, cmd2);
+		}
+		else
+		{
+			char *dir = getCurrentDir();
+			removeFile(dir, cmd1);
+		}
 	}
 	else if(strcmp(cmd, "cp") == 0)
 	{
@@ -68,7 +78,7 @@ bool awaitCmd()
 		char *dir = getCurrentDir();
 		createFile(dir, cmd1);
 	}
-	else if(strcmp(cmd, "end") == 0 || strcmp(cmd, "exit") == 0)
+	else if(strcmp(cmd, "end") == 0)
 	{
 		return false;
 	}
