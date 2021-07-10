@@ -30,6 +30,12 @@ bool awaitCmd()
 		scanf("%s", cmd1);
 		launchVim(cmd1);
 	}
+	else if(strcmp(cmd, "mkdir") == 0)
+	{
+		scanf("%s", cmd1);
+		char *dir = getCurrentDir();
+		createDir(dir, cmd1);
+	}
 	else if(strcmp(cmd, "rm") == 0)
 	{
 		scanf("%s", cmd1);
