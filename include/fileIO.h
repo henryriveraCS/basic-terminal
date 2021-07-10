@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <ctype.h>
+//#include <ctype.h>
 
 //MACROS
 //max path length allowed by win32 api
@@ -17,6 +17,7 @@
 void errorMsg(char *error);
 void clearIO(void);
 void printHelp();
+bool isDir(const char *dirPath);
 char *getCurrentDir(void);
 void changeDir(char *dir);
 char *buildPath(char *tmp, const char *dir, const char*fileName);
@@ -82,8 +83,22 @@ void errorMsg(char *error)
 void printHelp()
 {
     char *cmds = "THE FOLLOWING COMMANDS ARE AVAILABLE ON THIS TERMINAL:\n"
-                 "ls\ncd\ntouch\npwd\nclear\nvim\nend OR exit\n";
+                 "ls\ncd\ntouch\npwd\nclear\nvim\nend\n";
     printf("%s", cmds);
+}
+
+bool isDir(const char *dirPath)
+{
+	DIR *dir;
+	dir = opendir(dirPath);	
+	if(dir == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 
@@ -107,14 +122,14 @@ void readDir(void)
         //check if this is a dir
         if( S_ISDIR(filestat.st_mode) )
         {
-            setFontMagenta;
+            setFontGreen;
             printf("DIRECTORY: ");
             setFontWhite;
             printf("%s\n", entry->d_name);
         }
         else
         {
-            setFontGreen;
+            setFontBlue;
             printf("FILE: ");
             setFontWhite;
             printf("%s\n", entry->d_name);
@@ -182,21 +197,61 @@ void createFile(const char *dir, const char *fileName)
 	}
 }
 
+void removeDir(const char *dir, const char *dirName)
+{
+	char *tmp;
+	tmp = (char *) malloc(UNIX_MAX_PATH);
+	buildPath(tmp, dir, dirName);
+
+	if( isDir(tmp) )
+	{
+		//try deleting the directory
+		if( remove(tmp) == 0)
+		{
+			setFontGreen;
+			printf("SUCESSFULLY DELETED DIRECTORY %s\n", dirName);
+			setFontWhite;
+		}
+		else
+		{
+			char *msg = "ERROR DELETING DIRECTORY";
+			errorMsg(msg);
+		}
+	}
+	else
+	{
+		char *msg = "ERROR, THIS IS NOT A DIRECTORY. PLEASE USE *rm [FILE_NAME]* to delete a file";
+		errorMsg(msg);
+	}
+	free(tmp);
+}
+
 void removeFile(const char *dir, const char *fileName)
 {
 	char *tmp;
 	tmp = (char *) malloc(UNIX_MAX_PATH);
 
 	buildPath(tmp, dir, fileName);
-	
-	if(remove(tmp) == 0)
+	//check if this is a file OR a directory(user must use rm -d for deleting directories)
+	if( isDir(tmp) )
 	{
-		printf("DELETED: %s/%s\n", dir, fileName);
+		char *msg = "ERROR, THIS IS A DIRECTORY. PLEASE USE *rm -d [DIRECTORY]* to delete a directory";
+		errorMsg(msg);
 	}
 	else
 	{
-		char *msg = "ERROR DELETING THE FILE. PLEASE MAKE SURE IT EXISTS";
-		errorMsg(msg);
+		//try deleting the file -> if it fails then let the user know
+		if ( remove(tmp) == 0 )
+		{
+			setFontGreen;
+			printf("DELETED: %s/%s\n", dir, fileName);
+			setFontWhite;
+		}
+		else
+		{
+			char *msg = "ERROR DELETING THE FILE. PLEASE MAKE SURE IT EXISTS";
+			errorMsg(msg);
+		}
 	}
 	free(tmp);
 }
