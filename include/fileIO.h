@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 //#include <ctype.h>
 
 //MACROS
@@ -26,7 +27,7 @@ void createFile(const char *dir, const char *fileName);
 void copyFile(const char *dir, const char *oldFileName, const char *newFileName);
 void readFile(const char *dir, const char *fileName);
 void readDir(void);
-void copyDir(const char *cwd, const char *cmd);
+void copyDir(const char *dir, const char *oldDirName, const char *newDirName);
 
 //font color macros
 #define setFontWhite { printf("\033[0m"); }
@@ -54,7 +55,7 @@ char *getCurrentDir(void)
     if(BUF == NULL)
     {
         setFontRed;
-        printf("\nERROR GETTING DIRECTORY: %s \n\n", BUF);
+        printf("ERROR GETTING DIRECTORY: %s \n\n", BUF);
         setFontWhite;
     }
 	cwd = BUF;
@@ -160,7 +161,9 @@ void readFile(const char *dir, const char *fileName)
 			//while you can still read characters in the file(not end of file)
 			while( (c = getc(file)) != EOF)
 			{
-				printf("%c", c);
+				setFontWhite;
+			   	setFontWhite;
+			   	printf("%c", c);
 			}
 			printf("\n");
 		}
@@ -214,7 +217,7 @@ void removeDir(const char *dir, const char *dirName)
 		}
 		else
 		{
-			char *msg = "ERROR DELETING DIRECTORY";
+			char *msg = "ERROR DELETING DIRECTORY... PLEASE MAKE SURE IT EXISTS OR IT DOES NOT HAVE FILES INSIDE";
 			errorMsg(msg);
 		}
 	}
@@ -279,9 +282,160 @@ void createDir(const char *dir, const char *dirName)
 
 }
 
-void copyDir(const char *cwd, const char *cmd)
+void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 {
+    struct dirent *entry;
+	//DIR *newDir;
+	DIR *oldDir;
+	FILE *oldFile;
+	FILE *newFile;
+	//char tmp[UNIX_MAX_PATH];
+	char *oldTmp;
+	char *newTmp;
+	int oldCount = 0;
+	int newCount = 0;
+	char c;
+	char *oldTmpFileName;
+	char *newTmpFileName;
+	char *oldTmpDirName;
+	char *newTmpDirName;
 
+	oldTmp = (char *) malloc(UNIX_MAX_PATH);
+	newTmp = (char *) malloc(UNIX_MAX_PATH);
+	oldTmpFileName = (char *) malloc(UNIX_MAX_PATH);
+	newTmpFileName = (char *) malloc(UNIX_MAX_PATH);
+	
+	buildPath(oldTmp, dir, oldDirName);
+	buildPath(newTmp, dir, newDirName);
+
+	oldDir = opendir(oldTmp);
+	//newDir = opendir(newTmp);
+
+	//check if old dir exists to copy from
+	printf("CHECKING IF %s/%s EXISTS\n", dir, oldDirName);
+	if( isDir(oldTmp) && oldDir != NULL )
+	{
+		printf("CHECKING IF %s/%s EXISTS\n", dir, newDirName);
+		//check if new dir exists 
+		if( isDir(newTmp) )
+		{
+			printf("GOING THROUGH FILES IN %s/%s\n", dir, newDirName);	
+			//open the old directory -> iterate through each file/dir -> copy to new dir (if it doens't exists)
+			while( (entry=readdir(oldDir)) )
+			{
+				//this is to prevent . and .. from being looked through during the copying process
+				if( strncmp(entry->d_name, ".", UNIX_MAX_PATH) && strncmp(entry->d_name, "..", UNIX_MAX_PATH) )
+				{
+					oldCount ++; //track how many dirs/files in this directory
+					//if stat isn't pointed inside the directory itself, it returns -1 for S_ISDIR
+					//chdir(oldTmp);
+					strncpy(oldTmpFileName, oldTmp, UNIX_MAX_PATH);
+					strncat(oldTmpFileName, "/", UNIX_MAX_PATH);
+					strncat(oldTmpFileName, entry->d_name, UNIX_MAX_PATH);
+					//build new path to use for appending files
+					strncpy(newTmpFileName, newTmp, UNIX_MAX_PATH);
+					strncat(newTmpFileName, "/", UNIX_MAX_PATH);
+					strncat(newTmpFileName, entry->d_name, UNIX_MAX_PATH);
+					//stat won't load unless you give it the full directory
+					stat(oldTmpFileName, &filestat);
+					//check if this is a dir
+					if( S_ISDIR(filestat.st_mode) )
+					{
+						/*
+						strncat(oldTmpDirName, oldTmp, UNIX_MAX_PATH);
+						strncat(oldTmpDirName, "/", UNIX_MAX_PATH);
+						strncat(oldTmpDirName, entry->d_name, UNIX_MAX_PATH);
+
+						strncat(newTmpDirName, newTmp, UNIX_MAX_PATH);
+						strncat(newTmpDirName, "/", UNIX_MAX_PATH);
+						strncat(newTmpDirName, entry->d_name, UNIX_MAX_PATH);
+
+						//point copydir to the nested path in old dir and put it in new dir
+						copyDir(oldTmpDirName, entry->d_name, entry->d_name);
+						printf("%s\n", entry->d_name);
+						*/
+					}
+					else
+					{
+						printf("3. %s\n", newTmpFileName);
+						newCount ++;
+						oldFile = fopen(oldTmpFileName, "r");
+						//create new file in new dir -> copy content over
+						printf("5. %s\n", newTmpFileName);
+						createFile(newTmp, entry->d_name);
+						newFile = fopen(newTmpFileName, "a");
+						if( oldFile != NULL)
+						{
+							while( (c=getc(oldFile)) != EOF)
+							{
+								fprintf(newFile, "%c", c);	
+							}
+							printf("\n%i ITEMS WERE COPIED TO %s\n", newCount, newTmp);
+							fclose(newFile);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			printf("CREATING DIR: %s/%s\n", dir, newDirName);
+			createDir(dir, newDirName);
+			while( (entry=readdir(oldDir)) )
+			{
+				if( strncmp(entry->d_name, ".", UNIX_MAX_PATH) && strncmp(entry->d_name, "..", UNIX_MAX_PATH) )
+				{
+					oldCount ++; //track how many dirs/files in this directory
+					strncpy(oldTmpFileName, oldTmp, UNIX_MAX_PATH);
+					printf("10. %s\n", oldTmpFileName);
+					strncat(oldTmpFileName, "/", UNIX_MAX_PATH);
+					strncat(oldTmpFileName, entry->d_name, UNIX_MAX_PATH);
+					printf("11. %s\n", oldTmpFileName);
+
+					//build new path to use for appending files
+					strncpy(newTmpFileName, newTmp, UNIX_MAX_PATH);
+					strncat(newTmpFileName, "/", UNIX_MAX_PATH);
+					strncat(newTmpFileName, entry->d_name, UNIX_MAX_PATH);
+					stat(oldTmpFileName, &filestat);
+
+					if( S_ISDIR(filestat.st_mode) )
+					{
+						//EDIT THIS
+						setFontGreen;
+						printf("DIRECTORY: ");
+						setFontWhite;
+						printf("%s\n", entry->d_name);
+					}
+					else
+					{
+						newCount ++;
+						oldFile = fopen(oldTmpFileName, "r");
+						//create new file in new dir -> copy content over
+						printf("12. %s\n", oldTmpFileName);
+						createFile(newTmp, entry->d_name);
+						newFile = fopen(newTmpFileName, "a");
+						if( oldFile != NULL)
+						{
+							while( (c=getc(oldFile)) != EOF)
+							{
+								fprintf(newFile, "%c", c);	
+							}
+							printf("\n%i ITEMS WERE COPIED TO %s\n", newCount, newTmp);
+							fclose(newFile);
+						}
+					}
+				}
+			}
+			//closedir(oldDir);
+		}
+	}
+	else
+	{
+		char *msg = "DIRECTORY YOU ARE TRYING TO COPY DOES NOT EXISTS";
+		errorMsg(msg);
+	}
+	free(newTmp);
+	free(oldTmp);
 }
 
 void copyFile(const char *dir, const char *oldFileName, const char *newFileName)
@@ -298,27 +452,30 @@ void copyFile(const char *dir, const char *oldFileName, const char *newFileName)
 	buildPath(oldTmp, dir, oldFileName);
 	buildPath(newTmp, dir, newFileName);
 
-	oldFile = fopen(oldTmp, "r");
-	newFile = fopen(newTmp, "a");
-	if(oldFile != NULL)
+	//double check that passed char* aren't actually directories
+	if( isDir(oldTmp) == false && isDir(newTmp) == false)
 	{
-		//while not at end of old file -> append the char to the new file
-		char c;	
-		while( (c = getc(oldFile)) != EOF )
+		oldFile = fopen(oldTmp, "r");
+		newFile = fopen(newTmp, "a");
+		if(oldFile != NULL)
 		{
-			fprintf(newFile, "%c", c);	
+			//while not at end of old file -> append the char to the new file
+			char c;	
+			while( (c = getc(oldFile)) != EOF )
+			{
+				fprintf(newFile, "%c", c);	
+			}
+			fclose(newFile);
+			fclose(oldFile);
 		}
+		printf("\nOLD FILE: %s\nNEW FILE: %s\n", oldTmp, newTmp);
 	}
 	else
 	{
-		char *msg = "EITHER ORIGINAL FILE PATH OR NEW FILE PATH IS OVER UNIX_MAX_PATH";
+		char *msg = "EITHER ORIGINAL FILE PATH OR NEW FILE PATH IS OVER UNIX_MAX_PATH\n OR ONE OF THE ARGUMENTS IS A DIRECTORY";
 		errorMsg(msg);
 	}
 
-	printf("\nOLD FILE: %s\nNEW FILE: %s\n", oldTmp, newTmp);
-	//free space after doing what you need to do
-	fclose(newFile);
-	fclose(oldFile);
 	free(oldTmp);
 	free(newTmp);
 }
