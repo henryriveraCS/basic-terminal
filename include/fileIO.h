@@ -27,7 +27,7 @@ void createFile(const char *dir, const char *fileName);
 void copyFile(const char *dir, const char *oldFileName, const char *newFileName);
 void readFile(const char *dir, const char *fileName);
 void readDir(void);
-void copyDir(const char *dir, const char *oldDirName, const char *newDirName);
+void copyDir(const char *dir, const char *oldDirName, const char *newDirName, bool nestedCall);
 
 //font color macros
 #define setFontWhite { printf("\033[0m"); }
@@ -66,9 +66,16 @@ char *getCurrentDir(void)
 char *buildPath(char *tmp, const char *dir, const char *fileName)
 {
 	//copy to empty memory alloc first then append to that
-	strncpy(tmp, dir, (UNIX_MAX_PATH - strlen(cwd) -1));
-	strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") -1));
-	strncat(tmp, fileName, (UNIX_MAX_PATH - strlen(fileName) - 1));
+	if( dir != NULL)
+	{
+		strncpy(tmp, dir, (UNIX_MAX_PATH - strlen(cwd) -1));
+		strncat(tmp, "/", (UNIX_MAX_PATH - strlen("/") -1));
+		strncat(tmp, fileName, (UNIX_MAX_PATH - strlen(fileName) - 1));
+	}
+	else
+	{
+		strncpy(tmp, fileName, (UNIX_MAX_PATH - strlen(fileName) - 1));
+	}
 
 	return tmp;
 }
@@ -282,7 +289,7 @@ void createDir(const char *dir, const char *dirName)
 
 }
 
-void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
+void copyDir(const char *dir, const char *oldDirName, const char *newDirName, bool nestedCall)
 {
     struct dirent *entry;
 	//DIR *newDir;
@@ -302,24 +309,36 @@ void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 
 	oldTmp = (char *) malloc(UNIX_MAX_PATH);
 	newTmp = (char *) malloc(UNIX_MAX_PATH);
-	oldTmpFileName = (char *) malloc(UNIX_MAX_PATH);
-	newTmpFileName = (char *) malloc(UNIX_MAX_PATH);
 	
-	buildPath(oldTmp, dir, oldDirName);
-	buildPath(newTmp, dir, newDirName);
+	oldTmpFileName = (char *) malloc(UNIX_MAX_PATH);
+	oldTmpDirName = (char *) malloc(UNIX_MAX_PATH);
 
-	oldDir = opendir(oldTmp);
-	//newDir = opendir(newTmp);
+	newTmpFileName = (char *) malloc(UNIX_MAX_PATH);
+	newTmpDirName =(char *) malloc(UNIX_MAX_PATH);
 
+	if(nestedCall == false)
+	{
+		buildPath(oldTmp, dir, oldDirName);
+		buildPath(newTmp, dir, newDirName);
+
+		oldDir = opendir(oldTmp);
+	}
+	else
+	{
+		//because this is a nested loop, the following changes:
+		//dir is  the original directory(where call was called from)
+		//oldDirName is now the FULL directory that needs to be copied
+		//newDirName is now the FULL directroy pointing to where the info needs to be pasted
+		oldDir = opendir(oldDirName);
+		strncpy(oldTmp, oldDirName, UNIX_MAX_PATH);
+		strncpy(newTmp, newDirName, UNIX_MAX_PATH);
+	}
 	//check if old dir exists to copy from
-	printf("CHECKING IF %s/%s EXISTS\n", dir, oldDirName);
 	if( isDir(oldTmp) && oldDir != NULL )
 	{
-		printf("CHECKING IF %s/%s EXISTS\n", dir, newDirName);
 		//check if new dir exists 
 		if( isDir(newTmp) )
 		{
-			printf("GOING THROUGH FILES IN %s/%s\n", dir, newDirName);	
 			//open the old directory -> iterate through each file/dir -> copy to new dir (if it doens't exists)
 			while( (entry=readdir(oldDir)) )
 			{
@@ -327,8 +346,6 @@ void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 				if( strncmp(entry->d_name, ".", UNIX_MAX_PATH) && strncmp(entry->d_name, "..", UNIX_MAX_PATH) )
 				{
 					oldCount ++; //track how many dirs/files in this directory
-					//if stat isn't pointed inside the directory itself, it returns -1 for S_ISDIR
-					//chdir(oldTmp);
 					strncpy(oldTmpFileName, oldTmp, UNIX_MAX_PATH);
 					strncat(oldTmpFileName, "/", UNIX_MAX_PATH);
 					strncat(oldTmpFileName, entry->d_name, UNIX_MAX_PATH);
@@ -341,27 +358,25 @@ void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 					//check if this is a dir
 					if( S_ISDIR(filestat.st_mode) )
 					{
-						/*
-						strncat(oldTmpDirName, oldTmp, UNIX_MAX_PATH);
+						strncpy(oldTmpDirName, oldTmp, UNIX_MAX_PATH);
 						strncat(oldTmpDirName, "/", UNIX_MAX_PATH);
 						strncat(oldTmpDirName, entry->d_name, UNIX_MAX_PATH);
+						printf("OLDTMP DIR NAME: %s\n", oldTmpDirName);
 
-						strncat(newTmpDirName, newTmp, UNIX_MAX_PATH);
+						strncpy(newTmpDirName, newTmp, UNIX_MAX_PATH);
 						strncat(newTmpDirName, "/", UNIX_MAX_PATH);
 						strncat(newTmpDirName, entry->d_name, UNIX_MAX_PATH);
+						printf("NEWTMP DIR NAME: %s\n", newTmpDirName);
 
 						//point copydir to the nested path in old dir and put it in new dir
-						copyDir(oldTmpDirName, entry->d_name, entry->d_name);
+						copyDir(oldTmp, oldTmpDirName, newTmpDirName, true);
 						printf("%s\n", entry->d_name);
-						*/
 					}
 					else
 					{
-						printf("3. %s\n", newTmpFileName);
 						newCount ++;
 						oldFile = fopen(oldTmpFileName, "r");
 						//create new file in new dir -> copy content over
-						printf("5. %s\n", newTmpFileName);
 						createFile(newTmp, entry->d_name);
 						newFile = fopen(newTmpFileName, "a");
 						if( oldFile != NULL)
@@ -379,18 +394,24 @@ void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 		}
 		else
 		{
-			printf("CREATING DIR: %s/%s\n", dir, newDirName);
-			createDir(dir, newDirName);
+			if(nestedCall)
+			{
+				printf("CREATING DIR: %s\n", newDirName);
+				createDir(NULL, newDirName);
+			}
+			else
+			{
+				printf("CREATING DIR: %s/%s\n", dir, newDirName);
+				createDir(dir, newDirName);
+			}
 			while( (entry=readdir(oldDir)) )
 			{
 				if( strncmp(entry->d_name, ".", UNIX_MAX_PATH) && strncmp(entry->d_name, "..", UNIX_MAX_PATH) )
 				{
 					oldCount ++; //track how many dirs/files in this directory
 					strncpy(oldTmpFileName, oldTmp, UNIX_MAX_PATH);
-					printf("10. %s\n", oldTmpFileName);
 					strncat(oldTmpFileName, "/", UNIX_MAX_PATH);
 					strncat(oldTmpFileName, entry->d_name, UNIX_MAX_PATH);
-					printf("11. %s\n", oldTmpFileName);
 
 					//build new path to use for appending files
 					strncpy(newTmpFileName, newTmp, UNIX_MAX_PATH);
@@ -400,18 +421,22 @@ void copyDir(const char *dir, const char *oldDirName, const char *newDirName)
 
 					if( S_ISDIR(filestat.st_mode) )
 					{
-						//EDIT THIS
-						setFontGreen;
-						printf("DIRECTORY: ");
-						setFontWhite;
-						printf("%s\n", entry->d_name);
+						strncpy(oldTmpDirName, oldTmp, UNIX_MAX_PATH);
+						strncat(oldTmpDirName, "/", UNIX_MAX_PATH);
+						strncat(oldTmpDirName, entry->d_name, UNIX_MAX_PATH);
+
+						strncpy(newTmpDirName, newTmp, UNIX_MAX_PATH);
+						strncat(newTmpDirName, "/", UNIX_MAX_PATH);
+						strncat(newTmpDirName, entry->d_name, UNIX_MAX_PATH);
+
+						//point copydir to the nested path in old dir and put it in new dir
+						copyDir(oldTmpDirName, oldTmpDirName, newTmpDirName, true);
 					}
 					else
 					{
 						newCount ++;
 						oldFile = fopen(oldTmpFileName, "r");
 						//create new file in new dir -> copy content over
-						printf("12. %s\n", oldTmpFileName);
 						createFile(newTmp, entry->d_name);
 						newFile = fopen(newTmpFileName, "a");
 						if( oldFile != NULL)
