@@ -1,0 +1,20 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <stdio.h>
+#include <string.h>
+
+extern int UNIX_MAX_PATH;
+extern int WIN_MAX_PATH;
+
+void setFontWhite(void);
+void setFontMagenta(void);
+void setFontBlue(void);
+void setFontGreen(void);
+void setFontRed(void);
+
+void errorMsg(char *error);
+void clearIO(void);
+void printHelp(void);
+
+#endif /* CONFIG_H */

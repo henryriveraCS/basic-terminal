@@ -1,5 +1,7 @@
 #include "./include/floridaVim.h"
 #include "./include/fileIO.h"
+#include "./include/directoryIO.h"
+#include "./include/config.h"
 
 bool loadCmd = true;
 
@@ -120,9 +122,9 @@ int main ()
 	while(loadCmd)
 	{
 		printf("BASIC TERMINAL ");
-		setFontBlue;
+		setFontBlue();
 		printf("[%s]", getCurrentDir());
-		setFontWhite;
+		setFontWhite();
 		printf(">");
 		loadCmd = awaitCmd();
 	}
