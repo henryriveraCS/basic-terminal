@@ -62,7 +62,7 @@ bool awaitCmd()
 			scanf("%s", cmd2);
 			scanf("%s", cmd3);
 			char *dir = getCurrentDir();
-			copyDir(dir, cmd2, cmd3);
+			copyDir(dir, cmd2, cmd3, false);
 		}
 		else
 		{
