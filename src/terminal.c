@@ -10,8 +10,9 @@ bool awaitCmd()
 	char cmd[UNIX_MAX_PATH];
 	char cmd1[UNIX_MAX_PATH];
 
-	//used for cmds that need 2 args (E.G: cp originalFile newFile)
+	//used for cmds that need 2+ args (E.G: cp originalFile newFile || rm -d directoryName)
 	char cmd2[UNIX_MAX_PATH];
+	char cmd3[UNIX_MAX_PATH];
 
 	scanf("%s", cmd);
 	//if value returned is 0 -> it will execute
@@ -55,9 +56,20 @@ bool awaitCmd()
 	else if(strcmp(cmd, "cp") == 0)
 	{
 		scanf("%s", cmd1);
-		scanf("%s", cmd2);
-		char *dir = getCurrentDir();
-		copyFile(dir, cmd1, cmd2);	
+		//if user wants to copy a dir
+		if(strcmp(cmd1, "-d") == 0)
+		{
+			scanf("%s", cmd2);
+			scanf("%s", cmd3);
+			char *dir = getCurrentDir();
+			copyDir(dir, cmd2, cmd3);
+		}
+		else
+		{
+			scanf("%s", cmd2);
+			char *dir = getCurrentDir();
+			copyFile(dir, cmd1, cmd2);	
+		}
 	}
 	else if(strcmp(cmd, "pwd") == 0)
 	{
