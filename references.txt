@@ -6,6 +6,11 @@ SECTION A:
 		https://c-for-dummies.com/blog/?p=3252
 		https://pubs.opengroup.org/onlinepubs/009696699/functions/mkdir.html
 		https://cboard.cprogramming.com/c-programming/143382-implementation-linux-cp-copy-command-c-language.html
+		https://www.ibm.com/docs/en/zos/2.3.0?topic=functions-stat-stat64-get-file-information
+		https://stackoverflow.com/questions/36867401/c-strange-stat-st-mode (fixed dir issue with loading 2 diff folders)
+		https://linux.die.net/man/2/fstat
+		https://man7.org/linux/man-pages/man2/open.2.html
+		https://pubs.opengroup.org/onlinepubs/009696699/functions/fstat.html
 
 	3. FLORIDA VIM:
 		https://github.com/vim/vim/blob/master/src/fileio.c
