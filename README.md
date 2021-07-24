@@ -2,7 +2,7 @@
 
 <b> Terminal written in C that can run on UNIX machines. It's basically a more minimal(*buggy*) version of Cygwin. </b>
 
-<h2> HOW TO COMPILE/RUN </h2>
+<h2> HOW TO COMPILE/RUN ON MACOSX OR LINUX</h2>
 <ul>
   <li>1. <code>git clone https://github.com/henryriveraCS/basic-terminal</code> </li>
   <li>2. Run <code>make</code> inside the <code>basic-terminal</code> folder</li>
