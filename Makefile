@@ -15,7 +15,7 @@ TARGET= basic-terminal
 
 #build B-terminal
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(DEPS) $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
 
 #rebuild out the program
 clean:
