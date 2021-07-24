@@ -8,6 +8,21 @@
 #include "./include/directoryIO.h"
 #include "./include/config.h"
 
+bool isFile(const char* filePath)
+{
+	FILE *tmp;
+	tmp = fopen(filePath, "r");
+	if(tmp == NULL)
+	{
+		return false;	
+	}
+	else
+	{
+		return true;
+	}
+	fclose(tmp);
+}
+
 void readFile(const char *dir, const char *fileName)
 {
     FILE *file;
@@ -30,7 +45,6 @@ void readFile(const char *dir, const char *fileName)
 			//while you can still read characters in the file(not end of file)
 			while( (c = getc(file)) != EOF)
 			{
-				setFontWhite();
 			   	setFontWhite();
 			   	printf("%c", c);
 			}

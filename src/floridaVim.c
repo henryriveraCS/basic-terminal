@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <termios.h>
 #include <errno.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <sys/ioctl.h>
 //#include <errno.h>
 
 //create buffer -> output buffer
@@ -14,6 +16,12 @@
 #include "./include/floridaVim.h"
 
 /*
+	q = 111 0001
+ ctrl = 001 0001
+ ---------------
+ 	  = 001 0001
+	  17
+
 	a control character is separated from it's printable version by decimal 96, or 110 0000 binary
 
 	The definition below does a bitwise AND between (k) and 0x1f
@@ -33,23 +41,23 @@
 	end result is: 10001 -> which converts to 017 -> which is the ASCII representation for CTRL (meaning ctrl + q was pressed)
 */
 
-//perform logical AND between k AND 0x1f
-
+//defining our escape key method (ctrl+q)
 #define CTRL_KEY(k) ((k) & 0x1f)
+
+//editor settings
+struct editorConfig
+{
+	struct termios orig_termios;
+	int screenrows;
+	int screencols;
+};
+
+struct editorConfig E;
 
 //determines if user is still editing or ended the editor process
 int editing = true;
 //original terminal
 struct termios orig_termios;
-
-//used to change wasd into arrow keys
-enum editorKey 
-{
-	ARROW_LEFT = 'a',
-	ARROW_RIGHT = 'd',
-	ARROW_UP = 'w',
-	ARROW_DOWN = 's'
-};
 
 void died(const char *s)
 {
@@ -67,9 +75,24 @@ char *editorRowsToString(int *wordBufLen)
 	return buf;
 }
 
+//used to draw the rows in the editor
+void editorDrawRows(void)
+{
+	int y;
+	for(y = 0; y < E.screenrows; y++)
+	{
+		write(STDOUT_FILENO, "~", 1);
+
+		if ( y < E.screenrows -1)
+		{
+			write(STDOUT_FILENO, "~\r\n", 2);
+		}
+	}
+}
+
 void disableRawMode(void)
 {
-	if( tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1)
+	if( tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1)
 	{
 		died("tcsetattr");
 	}
@@ -86,7 +109,7 @@ void enableRawMode(void)
   	//atexit(disableRawMode);
 
 	//instace representing the text editor
-	struct termios raw = orig_termios;
+	struct termios raw = E.orig_termios;
 	//disabling IXON (i = input flag, XON = control names that CTRL+S/CTRL+Q produce)
 	//ICRNL REPRESENTS CTRL+M FIX
 	raw.c_iflag &= ~(IXON | ICRNL);
@@ -97,6 +120,48 @@ void enableRawMode(void)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
+//gets the terminal size using IOCTL
+int getWindowSize(int *rows, int *cols) {
+  struct winsize ws;
+  if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+    return -1;
+  } else {
+    *cols = ws.ws_col;
+    *rows = ws.ws_row;
+    return 0;
+  }
+}
+
+//"dynamic" string structure
+struct abuf 
+{
+	char *b;
+	int len;
+};
+
+#define ABUF_INIT {NULL, 0}
+
+void abAppend(struct abuf *ab, const char *s, int len) {
+  char *new = realloc(ab->b, ab->len + len);
+  if (new == NULL) return;
+  memcpy(&new[ab->len], s, len);
+  ab->b = new;
+  ab->len += len;
+}
+void abFree(struct abuf *ab) {
+  free(ab->b);
+}
+
+int initEditor(void)
+{
+	if(getWindowSize(&E.screenrows, &E.screencols) == -1)
+	{
+		char *msg = "ERROR GETTING SIZE OF WINDOW";
+		errorMsg(msg);
+		return -1;
+	}
+	return 0;
+}
 
 int launchFloridaVim(char *dir, char *fileName)
 {
@@ -141,6 +206,11 @@ int launchFloridaVim(char *dir, char *fileName)
 	printf("%s\n", tmpFileName);
 	//enable raw mode for termios
 	enableRawMode();
+	//make sure that you can get the terminal size otherwise terminate the program
+	if( initEditor() == -1)
+	{
+		editing = false;
+	}
 
 	while(editing)
 	{

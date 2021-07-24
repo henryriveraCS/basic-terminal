@@ -19,6 +19,10 @@ SECTION A:
 		https://man7.org/linux/man-pages/man3/termios.3.html
 		https://stanislavs.org/helppc/scan_codes.html
 		https://jkorpela.fi/chars/c0.html
+		http://marvin.cs.uidaho.edu/Teaching/CS504/bitOps.html
+		https://www.cprogramming.com/tutorial/unicode.html
+		https://www.reddit.com/r/learnprogramming/comments/6vyoxj/can_someone_explain_this_definition_c/
+		https://www.eso.org/~ndelmott/ascii.html
 
 	4. PERMISSION BITS FOR CREATING FOLDERS/FILES/DIRECTORIES:
 		https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
