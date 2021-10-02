@@ -28,12 +28,14 @@ bool awaitCmd()
 		char *dir = getCurrentDir();
 		readFile(dir, cmd1);
 	}
+	/*
 	else if(strcmp(cmd, "vim") == 0)
 	{
 		scanf("%s", cmd1);
 		char *dir = getCurrentDir();
 		launchFloridaVim(dir, cmd1);
 	}
+	*/
 	else if(strcmp(cmd, "mkdir") == 0)
 	{
 		scanf("%s", cmd1);
