@@ -28,7 +28,7 @@ void errorMsg(char *error)
 void printHelp(void)                                                                                                              
 {
     char *cmds = "THE FOLLOWING COMMANDS ARE AVAILABLE ON THIS TERMINAL:\n"
-                 "ls\ncd [DIRECTRY_NAME]\ntouch [FILE_NAME]\npwd\nclear\nvim [FILE_NAME]\nend\n"
+                 "ls\ncd [DIRECTRY_NAME]\ntouch [FILE_NAME]\npwd\nclear\nend\n"
                  "cp [ORIGINAL_FILE_NAME] [COPIED_FILE_NAME]\nmkdir [DIRECTORY_NAME]\n"
                  "FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
     printf("%s", cmds);
