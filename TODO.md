@@ -1,6 +1,9 @@
 <h>TODO</h>
 <ul>
 	<li>
+		<p>Add "basic" networking commands (ping, wget, etc) *IN PROGRESS* </p>
+	<li>
+	<li>
 		<p>add a VIM-like editor</p>
 	</li>
 	<li>
