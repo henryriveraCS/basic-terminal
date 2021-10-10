@@ -1,12 +1,12 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include <unistd.h>
-#include <stdlib.h>
-
 #include "./include/fileIO.h"
 #include "./include/directoryIO.h"
 #include "./include/config.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
 
 bool isFile(const char* filePath)
 {
