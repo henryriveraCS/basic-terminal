@@ -37,3 +37,5 @@ SECTION A:
 		https://pubs.opengroup.org/onlinepubs/7908799/xns/syssocket.h.html
 		https://www.gnu.org/software/libc/manual/html_node/Inet-Example.html
 		https://stackoverflow.com/questions/9688899/sending-icmp-packets-in-a-c-program
+		https://www.activexperts.com/network-component/tutorials/ping/
+		https://github.com/hayderimran7/advanced-socket-programming/blob/master/ping.c
