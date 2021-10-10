@@ -3,6 +3,8 @@
 #include "./include/directoryIO.h"
 #include "./include/config.h"
 
+#include <string.h>
+
 bool loadCmd = true;
 
 //this will be used by main to wait for commands
