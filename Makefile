@@ -5,10 +5,10 @@ CC = gcc
 CFLAGS = -Wall -I.
 
 #dependancies we need
-DEPS = include/fileIO.h include/floridaVim.h include/directoryIO.h include/config.h
+#DEPS = include/fileIO.h include/floridaVim.h include/directoryIO.h include/config.h
 
 #what objects are part of final program
-OBJ = src/terminal.c src/fileIO.c src/floridaVim.c src/directoryIO.c src/config.c
+OBJ = src/terminal.c src/fileIO.c src/floridaVim.c src/directoryIO.c src/config.c src/netIO.c
 
 #final program
 TARGET= basic-terminal
