@@ -1,6 +1,7 @@
 #include "./include/floridaVim.h"
 #include "./include/fileIO.h"
 #include "./include/directoryIO.h"
+#include "./include/netIO.h"
 #include "./include/config.h"
 
 #include <string.h>
@@ -29,6 +30,12 @@ bool awaitCmd()
 		scanf("%s", cmd1);
 		char *dir = getCurrentDir();
 		readFile(dir, cmd1);
+	}
+	else if (strcmp(cmd, "ping") == 0)
+	{
+		scanf("%s", cmd1);
+		int ipLength = strlen(cmd1);
+		ping(cmd1, ipLength);
 	}
 	/*
 	else if(strcmp(cmd, "vim") == 0)
@@ -97,7 +104,7 @@ bool awaitCmd()
 		char *dir = getCurrentDir();
 		createFile(dir, cmd1);
 	}
-	else if(strcmp(cmd, "end") == 0)
+	else if(strcmp(cmd, "exit") == 0)
 	{
 		return false;
 	}
@@ -116,8 +123,12 @@ bool awaitCmd()
 //used when the program is first initialized
 void init()
 {
+	//load up the banner from ./banner.txt
 	clearIO();
-	char *introMsg = "BASIC TERMINAL INITLIAZED.\n""TYPE 'help' or 'h' for more info.\n";
+	char *dir = getCurrentDir();
+	char *fileName = "./banner.txt";
+	readFile(dir, fileName);
+	char *introMsg = "BASIC TERMINAL INITIALIZED.\nTYPE 'help' or 'h' for info on more commands.\n";
 	printf("%s", introMsg);
 }
 
