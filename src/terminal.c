@@ -128,7 +128,7 @@ void init()
 	char *dir = getCurrentDir();
 	char *fileName = "./banner.txt";
 	readFile(dir, fileName);
-	char *introMsg = "BASIC TERMINAL INITIALIZED.\nTYPE 'help' or 'h' for info on more commands.\n";
+	char *introMsg = "BASIC TERMINAL INITIALIZED.\nTYPE 'help' for info on more commands.\n";
 	printf("%s", introMsg);
 }
 

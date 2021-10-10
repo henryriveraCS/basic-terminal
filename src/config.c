@@ -28,8 +28,16 @@ void errorMsg(char *error)
 void printHelp(void)                                                                                                              
 {
     char *cmds = "THE FOLLOWING COMMANDS ARE AVAILABLE ON THIS TERMINAL:\n"
-                 "ls\ncd [DIRECTRY_NAME]\ntouch [FILE_NAME]\npwd\nclear\nend\n"
-                 "cp [ORIGINAL_FILE_NAME] [COPIED_FILE_NAME]\nmkdir [DIRECTORY_NAME]\n"
-                 "FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
+                 "ls will display a list of files/directories in the current directory\n"
+		 "'cd [DIRECTRY_NAME]' will move you into the specified DIRECTORY_NAME\n"
+		 "'pwd' will show you the entire path to the current directory\n"
+		 "'touch [FILE_NAME]' will create a file with the specified FILE_NAME\n"
+		 "'clear' will clear all text from the terminal screen\n"
+		 "'exit' will leave the BASIC TERMINAL application\n"
+                 "'cp [FILE_NAME] [NEW_FILE_NAME]' will copy all contents from FILE_NAME into"
+		 "the specified NEW_FILE_NAME\n"
+		 "'mkdir [DIRECTORY_NAME]' will create a directory with the specified DIRECTORY_NAME\n"
+    		 "'ping XXX.XXX.XXX.XX' will send a ping request to the specified IP address (only ipv4)\n";
+                 //"FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
     printf("%s", cmds);
 }
