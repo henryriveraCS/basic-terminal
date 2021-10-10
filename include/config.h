@@ -1,9 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <stdio.h>
-#include <string.h>
-
 extern int UNIX_MAX_PATH;
 extern int WIN_MAX_PATH;
 
