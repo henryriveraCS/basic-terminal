@@ -33,4 +33,7 @@ SECTION A:
 	6. NETWORKING 
 		https://datatracker.ietf.org/doc/html/rfc792 (ICMP for ping)
 		https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX 
+		https://pubs.opengroup.org/onlinepubs/7908799/xns/netinetin.h.html
+		https://pubs.opengroup.org/onlinepubs/7908799/xns/syssocket.h.html
 		https://www.gnu.org/software/libc/manual/html_node/Inet-Example.html
+		https://stackoverflow.com/questions/9688899/sending-icmp-packets-in-a-c-program
