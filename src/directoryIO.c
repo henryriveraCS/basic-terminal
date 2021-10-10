@@ -1,15 +1,11 @@
-#include <sys/stat.h>
-#include <fcntl.h> 
-#include <dirent.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-
 #include "./include/fileIO.h"
 #include "./include/config.h"
+#include "./include/directoryIO.h"
 
+#include <dirent.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 
 //used to read out whether a file is a direcotry or entry
 struct stat filestat;
