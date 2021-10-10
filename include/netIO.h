@@ -2,7 +2,7 @@
 #define NETIO_H
 
 void printIP(char *ip, int len);
-void convertCharToIP(char *ip, int len, int *ipArr[4]);
+void convertCharToIP(char *ip, int len, int ipArr[4]);
 //supports ipv4 for now
 void ping (char *ip, int ipLength);
 char *sendMsg (char *msg);
