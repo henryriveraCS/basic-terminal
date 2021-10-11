@@ -1,6 +1,7 @@
 #ifndef NETIO_H
 #define NETIO_H
 
+void downloadURL(char *url, char *fileName);
 void printIP(char *ip, int len);
 void convertCharToIP(char *ip, int len, int ipArr[4]);
 //supports ipv4 for now
