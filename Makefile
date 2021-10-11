@@ -4,8 +4,8 @@ CC = gcc
 #-I. will look at current directory (./BASIC-TERMINAL)
 CFLAGS = -Wall -I.
 
-#dependancies we need
-#DEPS = include/fileIO.h include/floridaVim.h include/directoryIO.h include/config.h
+#external libraries
+EXT_LIBS = -lcurl
 
 #what objects are part of final program
 OBJ = src/terminal.c src/fileIO.c src/floridaVim.c src/directoryIO.c src/config.c src/netIO.c
@@ -15,7 +15,7 @@ TARGET= basic-terminal
 
 #build B-terminal
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
+	$(CC) $(CFLAGS) $(EXT_LIBS) -o $(TARGET) $(OBJ)
 
 #rebuild out the program
 clean:
