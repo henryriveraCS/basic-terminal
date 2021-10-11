@@ -1,7 +1,7 @@
 <h>TODO</h>
 <ul>
 	<li>
-		<p>Add "basic" networking commands (ping, <strik>curl</strike>, ftp, etc) *IN PROGRESS* </p>
+		<p>Add "basic" networking commands (ping, <strike>curl</strike>, ftp, etc) *IN PROGRESS* </p>
 	</li>
 	<li>
 		<p>Make compatible with Windows </p>
