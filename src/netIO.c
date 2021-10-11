@@ -6,7 +6,41 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <curl/curl.h>
 #include <time.h>
+
+
+void downloadURL(char *url, char *fileName)
+{
+	printf("Fetching: \n%s\n", url);
+
+	//unsigned int downloads = 0;
+	//int still_alive = 1;
+	CURL *curl = curl_easy_init();
+	if(curl)
+	{
+		CURLcode res;
+		//start reading the URL
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		//curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+		//open file
+		FILE *file = fopen( fileName, "w");
+		//write to opened file
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+		res = curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+		//close file in order to save read data
+		fclose(file);
+		printf("Successfully downloaded file\n");
+	}
+	else
+	{
+		printf("Error while downloading files, please make sure the lcurl library is linked.\n"
+			"Please also validate that you are using an HTTP/HTTPS link only.\n");
+	}
+
+}
 
 //struct for IPv4 --- ipV6 will be added soon
 typedef struct ipv4Hdr
