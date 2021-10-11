@@ -9,7 +9,27 @@
 #include <curl/curl.h>
 #include <time.h>
 
+//used when default "curl http://etc.com" is called by terminal
+void printURL(char *url)
+{
+	CURL *curl = curl_easy_init();
+	if(curl)
+	{
+		CURLcode res;
+		//start reading the URL
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		//curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+		res = curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+	}
+	else
+	{
+		printf("Error loading the URL, please make sure the lcurl library is linked.\n");
+	}
+}
 
+//used when "curl -d http://etc.com fileName" is called by terminal
 void downloadURL(char *url, char *fileName)
 {
 	printf("Fetching: \n%s\n", url);
@@ -37,7 +57,7 @@ void downloadURL(char *url, char *fileName)
 	else
 	{
 		printf("Error while downloading files, please make sure the lcurl library is linked.\n"
-			"Please also validate that you are using an HTTP/HTTPS link only.\n");
+			"Please also validate that you are using a valid link.\n");
 	}
 
 }
