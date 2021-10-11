@@ -37,7 +37,10 @@ void printHelp(void)
                  "'cp [FILE_NAME] [NEW_FILE_NAME]' will copy all contents from FILE_NAME into"
 		 "the specified NEW_FILE_NAME\n"
 		 "'mkdir [DIRECTORY_NAME]' will create a directory with the specified DIRECTORY_NAME\n"
-    		 "'ping XXX.XXX.XXX.XX' will send a ping request to the specified IP address (only ipv4)\n";
+    		 "'ping XXX.XXX.XXX.XX' will send a ping request to the specified IP address (only ipv4)\n"
+    		 "'curl [URL]' will display html/data from the specified url\n"
+    		 "'curl -d [URL] fileName' will download the data from the URL into the specified fileName"
+    		 "at the current directory\n";
                  //"FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
     printf("%s", cmds);
 }
