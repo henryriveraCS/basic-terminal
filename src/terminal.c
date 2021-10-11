@@ -45,6 +45,12 @@ bool awaitCmd()
 		launchFloridaVim(dir, cmd1);
 	}
 	*/
+	else if(strcmp(cmd, "curl") == 0)
+	{
+		scanf("%s", cmd1);
+		scanf("%s", cmd2);
+		downloadURL(cmd1, cmd2);
+	}
 	else if(strcmp(cmd, "mkdir") == 0)
 	{
 		scanf("%s", cmd1);
