@@ -48,8 +48,18 @@ bool awaitCmd()
 	else if(strcmp(cmd, "curl") == 0)
 	{
 		scanf("%s", cmd1);
-		scanf("%s", cmd2);
-		downloadURL(cmd1, cmd2);
+		if(strcmp(cmd1, "-d") == 0)
+		{
+			//this is the URL
+			scanf("%s", cmd2);
+			//this is the fileName
+			scanf("%s", cmd3);
+			downloadURL(cmd2, cmd3);
+		}
+		else
+		{
+			printURL(cmd1);
+		}
 	}
 	else if(strcmp(cmd, "mkdir") == 0)
 	{
