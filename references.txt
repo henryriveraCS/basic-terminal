@@ -30,7 +30,7 @@ SECTION A:
 	5. WRITING HEADER FILES
 		https://stackoverflow.com/questions/49099976/how-do-you-define-functions-in-header-files
 		https://stackoverflow.com/questions/4268589/warning-in-extern-declaration
-	6. NETWORKING 
+	6. NETWORKING
 		https://datatracker.ietf.org/doc/html/rfc792 (ICMP for ping)
 		https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX 
 		https://pubs.opengroup.org/onlinepubs/7908799/xns/netinetin.h.html
@@ -40,3 +40,6 @@ SECTION A:
 		https://www.activexperts.com/network-component/tutorials/ping/
 		https://github.com/hayderimran7/advanced-socket-programming/blob/master/ping.c
 		https://curl.se/libcurl/c/10-at-a-time.html
+		https://programmer.help/blogs/a-simple-ftp-client-implemented-in-c-language.html
+		https://www.netburner.com/NBDocs/Developer/html/ftp_8h.html
+		https://beej.us/guide/bgnet/
