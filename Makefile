@@ -1,8 +1,8 @@
 #use gcc compiler
 CC = gcc
 
-#-I. will look at current directory (./BASIC-TERMINAL)
-CFLAGS = -Wall -I.
+#display any warnings/errors
+CFLAGS += -Wall -I.
 
 #external libraries
 EXT_LIBS = -lcurl
@@ -15,7 +15,7 @@ TARGET= basic-terminal
 
 #build B-terminal
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(EXT_LIBS) -o $(TARGET) $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(EXT_LIBS)
 
 #rebuild out the program
 clean:
