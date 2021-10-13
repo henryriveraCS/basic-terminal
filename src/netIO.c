@@ -4,10 +4,43 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <curl/curl.h>
-#include <time.h>
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+
+//used to prep socket address struct for more uses(store data for later)
+struct addrinfo
+{
+	int              ai_flags;     // AI_PASSIVE, AI_CANONNAME (address flags)
+	int              ai_family;    // AF_INET, AF_INET6, AF_UNSPEC (defined socket family)
+	int              ai_socktype;  // SOCK_STREAM, SOCK_DGRAM (TCP, UDP)
+	int              ai_protocol;  // use 0 for "any"
+	size_t           ai_addrlen;   // size of ai_addr in bytes
+	struct sockaddr *ai_addr;      // struct sockaddr_in or _in6
+	char            *ai_canonname; // full canonical hostname
+	
+	struct addrinfo *ai_next;      // linked list, next node
+};
+
+//struct for IPv4 --- ipV6 will be added soon
+typedef struct ipv4Hdr
+{
+	unsigned int h_len; //length for header
+	unsigned int version; //version of IP(ipV4)
+	unsigned char tos; //type of service
+	unsigned short total_len; //total length of packet
+	unsigned short id; //unique identifier
+	unsigned short frag_flags; //flags that are set
+	unsigned ttl; //time-to-live
+	unsigned proto; //packets protocol (TCP, UDP, etc)
+	unsigned short cheksum; //checksum of IP
+
+	unsigned int sourceIP; //IP packet is being sent from
+	unsigned int destIP; //IP packet is being sent to
+} ipv4Header;
 
 //used when default "curl http://etc.com" is called by terminal
 void printURL(char *url)
@@ -62,26 +95,6 @@ void downloadURL(char *url, char *fileName)
 
 }
 
-//struct for IPv4 --- ipV6 will be added soon
-typedef struct ipv4Hdr
-{
-	unsigned int h_len; //length for header
-	unsigned int version; //version of IP(ipV4)
-	unsigned char tos; //type of service
-	unsigned short total_len; //total length of packet
-	unsigned short id; //unique identifier
-	unsigned short frag_flags; //flags that are set
-	unsigned ttl; //time-to-live
-	unsigned proto; //packets protocol (TCP, UDP, etc)
-	unsigned short cheksum; //checksum of IP
-
-	unsigned int sourceIP; //IP packet is being sent from
-	unsigned int destIP; //IP packet is being sent to
-} ipv4Header;
-
-#define ICMP_ECHO 8
-#define ICMP_ECHOREPLY 0
-#define ICMP_MIN 8
 
 int convertIntToBinary(int *ipArr, int length)
 {
@@ -148,12 +161,25 @@ void convertCharToIP(char *ip, int len, int ipArr[4])
 
 void ping(char *ip, int ipLength)
 {
-	//before doing anything related to ICMP - first convert the string into an
-	//IP address int. (we do this by taking a basic IP char address like -
-	//"10.0.2.1" and converting it to an int type into an array => [10, 0, 2, 1]
 	//int ipSize = 4;
-	int ipArr[] = {1234, 1234, 1234, 1234};
-	convertCharToIP(ip, ipLength, ipArr);
+	//int ipArr[] = {1234, 1234, 1234, 1234};
+	struct sockaddr_in sa; //IPv4 socket address
+	
+	//store the ipv4 address from IP into sa
+	int result = inet_pton(AF_INET, ip, &(sa.sin_addr));
+	//returns 1 on success, 0 if src isn't valid, -1 on error
+	switch(result)
+	{
+		case 0:
+			printf("This address is not valid\n");
+			break;
+		case -1:
+			printf("Error occured, please make sure the ip address is IPv4\n");
+			break;
+		default:
+			printf("valid IP address: %s\n", ip);	
+	}
+
 	/*
 	for (int i=0; i<ipSize; i++)
 	{
