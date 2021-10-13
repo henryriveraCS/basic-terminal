@@ -72,7 +72,7 @@ void downloadURL(char *url, char *fileName)
 	CURL *curl = curl_easy_init();
 	if(curl)
 	{
-		CURLcode res;
+		//CURLcode res
 		//start reading the URL
 		curl_easy_setopt(curl, CURLOPT_URL, url);
 		//curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP);
@@ -81,7 +81,7 @@ void downloadURL(char *url, char *fileName)
 		//write to opened file
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
-		res = curl_easy_perform(curl);
+		//res = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 		//close file in order to save read data
 		fclose(file);
