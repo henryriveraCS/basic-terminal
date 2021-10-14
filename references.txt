@@ -48,3 +48,6 @@ SECTION A:
 		https://datatracker.ietf.org/doc/html/rfc1122	
 	7. STRINGS
 		https://embeddedartistry.com/blog/2017/07/05/printf-a-limited-number-of-characters-from-a-string/
+	8. STRUCTURES AND CHAR ARRAYS
+		https://overiq.com/c-programming-101/array-of-strings-in-c/
+		https://fresh2refresh.com/c-programming/c-nested-structure/
