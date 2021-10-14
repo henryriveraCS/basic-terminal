@@ -10,6 +10,45 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+/*
+//size of packet
+#define PING_PKT_S 64
+//automatic port #
+#define PORT_NO 0
+//timeout delay for receiving packets (in secs)
+#define RECV_TIMEOUT 1
+struct ping_pkt
+{
+	struct icmphdr hdr;
+	char msg[PING_PKT_S-sizeof(struct icmphdr)];
+}
+
+//calculating the checksum of a packet
+unsigned short checksum(void *b, int len)
+{
+	unsigned short *buf = b;
+	unsigned int sum=0;
+	unsigned short result;
+
+	//split length into 16-bits (2-byte) words
+	for(sum = 0; len > 1; len -= 2)
+	{
+		sum += *buf++;	
+	}
+	if (len == 1)
+	{
+		sum += *(unsigned char*)buf;
+	}
+	//add the "words together"
+	sum = (sum >>16) + (sum & 0xFFFF);
+	//sum of this needs to be complemented
+	sum += (sum >> 16);
+	result = ~sum;
+	return result;
+	
+	//sender can put this value into the checksum field
+}
+*/
 
 //used to prep socket address struct for more uses(store data for later)
 struct addrinfo
