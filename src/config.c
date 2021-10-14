@@ -3,8 +3,8 @@
 
 #include "./include/config.h"
 
-#define UNIX_MAX_PATH 1024
 #define WIN_MAX_PATH 260
+int UNIX_MAX_PATH = 1024;
 
 void setFontWhite(void) { printf("\033[0m"); }
 void setFontMagenta(void) { printf("\033[35m"); }
