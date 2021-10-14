@@ -51,3 +51,4 @@ SECTION A:
 	8. STRUCTURES AND CHAR ARRAYS
 		https://overiq.com/c-programming-101/array-of-strings-in-c/
 		https://fresh2refresh.com/c-programming/c-nested-structure/
+		https://stackoverflow.com/questions/17466563/two-dimensional-array-of-characters-in-c
