@@ -43,3 +43,8 @@ SECTION A:
 		https://programmer.help/blogs/a-simple-ftp-client-implemented-in-c-language.html
 		https://www.netburner.com/NBDocs/Developer/html/ftp_8h.html
 		https://beej.us/guide/bgnet/
+		https://www.geeksforgeeks.org/ping-in-c/
+		http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
+		https://datatracker.ietf.org/doc/html/rfc1122	
+	7. STRINGS
+		https://embeddedartistry.com/blog/2017/07/05/printf-a-limited-number-of-characters-from-a-string/
