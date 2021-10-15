@@ -49,7 +49,6 @@ void printHelp(void)
 		 "'pwd' will show you the entire path to the current directory\n"
 		 "'touch [FILE_NAME]' will create a file with the specified FILE_NAME\n"
 		 "'clear' will clear all text from the terminal screen\n"
-		 "'exit' will leave the BASIC TERMINAL application\n"
                  "'cp [FILE_NAME] [NEW_FILE_NAME]' will copy all contents from FILE_NAME into"
 		 "the specified NEW_FILE_NAME\n"
 		 "'mkdir [DIRECTORY_NAME]' will create a directory with the specified DIRECTORY_NAME\n"
@@ -57,7 +56,10 @@ void printHelp(void)
     		 "'curl [URL]' will display html/data from the specified url\n"
     		 "'curl -d [URL] fileName' will download the data from the URL into the specified fileName"
     		 " at the current directory\n"
-    		 "'history' will display the last 10 commands executed\n";
+    		 "'history' will display the last 10 commands executed\n"
+    		 "'get [ID OF COMMAND HISTORY)' will execute whatever function from history you specify\n"
+		 "TO EXIT:\n"
+		 "'exit' will leave the BASIC TERMINAL application\n";
                  //"FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
     printf("%s", cmds);
 }
