@@ -52,7 +52,7 @@ void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd
 	}
 
 	//printf("passed log: %s\n", log);
-	strncpy(history[historyCount], log, sizeof(log));
+	strncpy(history[historyCount], log, UNIX_MAX_PATH);
 	historyCount += 1;
 
 	//check if the log is full, if it is -> reset to 0
