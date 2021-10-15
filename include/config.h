@@ -10,6 +10,7 @@ void setFontBlue(void);
 void setFontGreen(void);
 void setFontRed(void);
 
+int getTTY(char *log);
 void errorMsg(char *error);
 void clearIO(void);
 void printHelp(void);

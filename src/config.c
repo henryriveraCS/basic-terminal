@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 #include "./include/config.h"
 
@@ -11,6 +14,19 @@ void setFontMagenta(void) { printf("\033[35m"); }
 void setFontBlue(void) { printf("\033[0;34m"); }
 void setFontGreen(void) { printf("\033[32m"); }
 void setFontRed(void) { printf("\033[31m"); }
+
+//returns 1 on success, 0 on error
+int getTTY(char *log)
+{
+	char *tty_name = ttyname(STDIN_FILENO);
+	int ttyfd;
+	if((ttyfd = open(tty_name, O_WRONLY)) == -1)
+	{
+		printf("Error while opening TTY\n");
+		return 0;
+	}
+	return ttyfd;
+}
 
 void clearIO(void)
 {
