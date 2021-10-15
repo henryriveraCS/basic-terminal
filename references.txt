@@ -30,6 +30,7 @@ SECTION A:
 	5. WRITING HEADER FILES
 		https://stackoverflow.com/questions/49099976/how-do-you-define-functions-in-header-files
 		https://stackoverflow.com/questions/4268589/warning-in-extern-declaration
+
 	6. NETWORKING
 		https://datatracker.ietf.org/doc/html/rfc792 (ICMP for ping)
 		https://en.wikibooks.org/wiki/C_Programming/Networking_in_UNIX 
@@ -46,8 +47,11 @@ SECTION A:
 		https://www.geeksforgeeks.org/ping-in-c/
 		http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
 		https://datatracker.ietf.org/doc/html/rfc1122	
+
 	7. STRINGS
 		https://embeddedartistry.com/blog/2017/07/05/printf-a-limited-number-of-characters-from-a-string/
+		https://www.ibm.com/docs/en/zos/2.2.0?topic=functions-ungetc-push-character-onto-input-stream
+
 	8. STRUCTURES AND CHAR ARRAYS
 		https://overiq.com/c-programming-101/array-of-strings-in-c/
 		https://fresh2refresh.com/c-programming/c-nested-structure/
