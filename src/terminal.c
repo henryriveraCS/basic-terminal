@@ -8,72 +8,62 @@
 
 bool loadCmd = true;
 //used to keep "history" of commands issued
-int historyLen = 4;
-char *history[5] = { NULL };
+int historyLen = 10;
+//char history[10][UNIX_MAX_PATH] = {{ NULL }};
 int historyCount = 0;
+//char *cmds[10];
 
-void showHistory()
+void showHistory(char history[historyLen][UNIX_MAX_PATH])
 {
-	printf("SHOWING HISTORY \n");
+	printf("COMMAND HISTORY \n");
 	for(int i=0; i < historyLen; i++)
 	{
-		printf("%s", history[historyLen]);
+		if(strcmp(history[i], "000") != 0)
+		{
+			printf("Command %d: %s\n", i, history[i]);
+		}
 	}
 }
 
-//manually check for all commands (and append as into history as needed
-void updateHistory(char *cmd, char *cmd1, char *cmd2, char* cmd3)
+void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd1[], char cmd2[], char cmd3[])
 {
 	char log[UNIX_MAX_PATH];
-	int totalLen = (int)strlen(cmd);
-	//char log1[UNIX_MAX_PATH];
-	//char log2[UNIX_MAX_PATH];
-	//char log3[UNIX_MAX_PATH];
-	if(cmd && (cmd[0] != 0))
+	log[0] = '\0';
+	int totalLen = 0;
+	if(cmd[0] != '\0')
 	{
-		//strncpy(log, cmd, strlen(cmd));
-		//printf("CMD FILLED\n");
-		strncpy(log, cmd, UNIX_MAX_PATH-totalLen);
+		totalLen += (int)strlen(cmd);
+		strncpy(log, cmd, UNIX_MAX_PATH);
 	}
-	if(!cmd1 && (cmd[0] != 0))
+	if(cmd1[0] != '\0')
 	{
-		printf("CMD1 FILLED\n");
-		//strncpy(log, " ", 1);
-		//strncpy(log, cmd1, strlen(cmd1));
-		strncpy(log, cmd1+totalLen, UNIX_MAX_PATH-(int)strlen(cmd1));
-		totalLen += (int)strlen(cmd1);
+		strncat(log, " ", UNIX_MAX_PATH);
+		strncat(log, cmd1, UNIX_MAX_PATH);
 	}
-	if(!cmd2 && (cmd2[0] != 0))
+	if(cmd2[0] != '\0')
 	{
-		//strncpy(log, " ", 1);
-		printf("CMD2 FILLED\n");
-		strncpy(log, cmd2, totalLen);
-		totalLen += (int)strlen(cmd2);
+		strncat(log, " ", UNIX_MAX_PATH);
+		strncat(log, cmd2, totalLen);
 	}
-	if(!cmd3 && (cmd3[0] != 0))
+	if(cmd3[0] != '\0')
 	{
-		//strncpy(log, " ", 1);
-		printf("CMD3 FILLED\n");
-		strncpy(log, cmd3, totalLen);
-		totalLen += (int)strlen(cmd3);
+		strncat(log, " ", UNIX_MAX_PATH);
+		strncat(log, cmd3, totalLen);
 	}
-	//history[historyCount] = log;
-	//USE THIS
-	//strncpy(log, cmd, strlen(cmd));
-	//printf("ADDING HISTORY TEST: %.*s\n", (int)strlen(cmd), log);
-	
-	//printf("passed log: %.*s\n", totalLen, log);
-	history[historyCount] = cmd;
+
+	//printf("passed log: %s\n", log);
+	strncpy(history[historyCount], log, sizeof(log));
 	historyCount += 1;
+
 	//check if the log is full, if it is -> reset to 0
-	if(historyCount > historyLen+1)
+	if(historyCount > historyLen)
 	{
 		historyCount = 0;
 	}
 }
 
 //this will be used by main to wait for commands
-bool awaitCmd()
+bool awaitCmd(char history[historyLen][UNIX_MAX_PATH])
 {
 	//initialize the variables to be used later
 	char cmd[UNIX_MAX_PATH];
@@ -83,12 +73,10 @@ bool awaitCmd()
 	char cmd2[UNIX_MAX_PATH];
 	char cmd3[UNIX_MAX_PATH];
 
-	//initialize values to each command so we can properly store/check if there are values
-	//later
-	cmd[0] = 0;
-	cmd[1] = 0;
-	cmd[2] = 0;
-	cmd[3] = 0;
+	cmd[0] = '\0';
+	cmd1[0] = '\0';
+	cmd2[0] = '\0';
+	cmd3[0] = '\0';
 
 	scanf("%s", cmd);
 	//if value returned is 0 -> it will execute
@@ -201,7 +189,7 @@ bool awaitCmd()
 	}
 	else if(strcmp(cmd, "history") == 0)
 	{
-		showHistory();
+		showHistory(history);
 	}
 	else
 	{
@@ -209,7 +197,7 @@ bool awaitCmd()
 		errorMsg(msg);
 	}
 	//right before loop -> update history with all values
-	updateHistory(cmd, cmd1, cmd2, cmd3);
+	updateHistory(history, cmd, cmd1, cmd2, cmd3);
 	return true;
 }
 
@@ -227,6 +215,15 @@ void init()
 
 int main ()
 {
+	bool loadCmd = true;
+	char history[10][UNIX_MAX_PATH];
+	//initialize the values once so weird outputs don't show up in history log
+	for(int i=0; i < historyLen; i++)
+	{
+		//strncpy(history[i], NULL, UNIX_MAX_PATH);
+		//history[i] = (char *)'\0' ;
+		strcpy(history[i], "000");
+	}
 	init();
 	while(loadCmd)
 	{
@@ -235,6 +232,6 @@ int main ()
 		printf("[%s]", getCurrentDir());
 		setFontWhite();
 		printf(">");
-		loadCmd = awaitCmd();
+		loadCmd = awaitCmd(history);
 	}
 }
