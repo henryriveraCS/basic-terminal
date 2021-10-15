@@ -56,7 +56,8 @@ void printHelp(void)
     		 "'ping XXX.XXX.XXX.XX' will send a ping request to the specified IP address (only ipv4)\n"
     		 "'curl [URL]' will display html/data from the specified url\n"
     		 "'curl -d [URL] fileName' will download the data from the URL into the specified fileName"
-    		 "at the current directory\n";
+    		 " at the current directory\n"
+    		 "'history' will display the last 10 commands executed\n";
                  //"FOR MORE SPECIFIC USES USE 'HELP [COMMAND]'\n";
     printf("%s", cmds);
 }
