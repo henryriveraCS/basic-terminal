@@ -11,7 +11,11 @@
 #define historyLen 10
 int historyCount = 0;
 
+
+//used to keep program running
 bool loadCmd = true;
+//0 command run is valid (add to history), 1 if it is not
+int cmdValid = 0;
 
 void showHistory(char history[historyLen][UNIX_MAX_PATH])
 {
@@ -210,15 +214,17 @@ bool awaitCmd(char history[historyLen][UNIX_MAX_PATH])
 	}
 	else
 	{
+		cmdValid = 0;
 		char msg[] = "Please enter a valid command (help for more info)";
 		errorMsg(msg);
 	}
 	//right before loop -> update history with all values
 	//don't add "history" command into history to save space
-	if(strcmp(cmd, "history") != 0)
+	if(strcmp(cmd, "history") != 0 && cmdValid == 1)
 	{
 		updateHistory(history, cmd, cmd1, cmd2, cmd3);
 	}
+	cmdValid = 1;
 	return true;
 }
 
