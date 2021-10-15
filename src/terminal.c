@@ -29,10 +29,10 @@ void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd
 {
 	char log[UNIX_MAX_PATH];
 	log[0] = '\0';
-	int totalLen = 0;
+	//int totalLen = 0;
 	if(cmd[0] != '\0')
 	{
-		totalLen += (int)strlen(cmd);
+		//totalLen += (int)strlen(cmd);
 		strncpy(log, cmd, UNIX_MAX_PATH);
 	}
 	if(cmd1[0] != '\0')
@@ -43,16 +43,17 @@ void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd
 	if(cmd2[0] != '\0')
 	{
 		strncat(log, " ", UNIX_MAX_PATH);
-		strncat(log, cmd2, totalLen);
+		strncat(log, cmd2, UNIX_MAX_PATH);
 	}
 	if(cmd3[0] != '\0')
 	{
 		strncat(log, " ", UNIX_MAX_PATH);
-		strncat(log, cmd3, totalLen);
+		strncat(log, cmd3, UNIX_MAX_PATH);
 	}
 
 	//printf("passed log: %s\n", log);
-	strncpy(history[historyCount], log, UNIX_MAX_PATH);
+	//strcpy(history[historyCount], NULL);
+	strcpy(history[historyCount], log);
 	historyCount += 1;
 
 	//check if the log is full, if it is -> reset to 0
