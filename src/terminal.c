@@ -5,13 +5,13 @@
 #include "./include/config.h"
 
 #include <string.h>
+#include <stdlib.h>
+
+//used to keep "history" of commands issued
+#define historyLen 10
+int historyCount = 0;
 
 bool loadCmd = true;
-//used to keep "history" of commands issued
-int historyLen = 10;
-//char history[10][UNIX_MAX_PATH] = {{ NULL }};
-int historyCount = 0;
-//char *cmds[10];
 
 void showHistory(char history[historyLen][UNIX_MAX_PATH])
 {
@@ -51,8 +51,6 @@ void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd
 		strncat(log, cmd3, UNIX_MAX_PATH);
 	}
 
-	//printf("passed log: %s\n", log);
-	//strcpy(history[historyCount], NULL);
 	strcpy(history[historyCount], log);
 	historyCount += 1;
 
@@ -60,6 +58,19 @@ void updateHistory(char history[historyLen][UNIX_MAX_PATH], char cmd[], char cmd
 	if(historyCount > historyLen)
 	{
 		historyCount = 0;
+	}
+}
+
+void getHistory(char *cmd, char *logID, char history[historyLen][UNIX_MAX_PATH])
+{
+	int id = atoi(logID);
+	char toPut[UNIX_MAX_PATH];
+	toPut[0] = '\0';
+	strcpy(toPut, history[id]);
+	if(toPut[0] != '\0')
+	{
+		system(toPut);
+		printf("EXECUTED: %s\n", toPut);
 	}
 }
 
@@ -80,8 +91,13 @@ bool awaitCmd(char history[historyLen][UNIX_MAX_PATH])
 	cmd3[0] = '\0';
 
 	scanf("%s", cmd);
-	//if value returned is 0 -> it will execute
-	if(strcmp(cmd, "clear") == 0)
+
+	if(strcmp(cmd, "get") == 0)
+	{
+		scanf("%s", cmd1);
+		getHistory(cmd, cmd1, history);
+	}
+	else if(strcmp(cmd, "clear") == 0)
 	{
 		clearIO();	
 	}
@@ -198,11 +214,14 @@ bool awaitCmd(char history[historyLen][UNIX_MAX_PATH])
 		errorMsg(msg);
 	}
 	//right before loop -> update history with all values
-	updateHistory(history, cmd, cmd1, cmd2, cmd3);
+	//don't add "history" command into history to save space
+	if(strcmp(cmd, "history") != 0)
+	{
+		updateHistory(history, cmd, cmd1, cmd2, cmd3);
+	}
 	return true;
 }
 
-//used when the program is first initialized
 void init()
 {
 	clearIO();
@@ -221,8 +240,6 @@ int main ()
 	//initialize the values once so weird outputs don't show up in history log
 	for(int i=0; i < historyLen; i++)
 	{
-		//strncpy(history[i], NULL, UNIX_MAX_PATH);
-		//history[i] = (char *)'\0' ;
 		strcpy(history[i], "000");
 	}
 	init();
