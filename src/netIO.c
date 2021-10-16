@@ -9,77 +9,33 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netinet/ip.h>
 
-/*
 //size of packet
 #define PING_PKT_S 64
 //automatic port #
 #define PORT_NO 0
 //timeout delay for receiving packets (in secs)
 #define RECV_TIMEOUT 1
-struct ping_pkt
-{
-	struct icmphdr hdr;
-	char msg[PING_PKT_S-sizeof(struct icmphdr)];
-}
 
-//calculating the checksum of a packet
-unsigned short checksum(void *b, int len)
+//ICMP packets are encapsulated in an IP packet
+//therefore it will data like this:
+struct ip_packet
 {
-	unsigned short *buf = b;
-	unsigned int sum=0;
-	unsigned short result;
 
-	//split length into 16-bits (2-byte) words
-	for(sum = 0; len > 1; len -= 2)
-	{
-		sum += *buf++;	
-	}
-	if (len == 1)
-	{
-		sum += *(unsigned char*)buf;
-	}
-	//add the "words together"
-	sum = (sum >>16) + (sum & 0xFFFF);
-	//sum of this needs to be complemented
-	sum += (sum >> 16);
-	result = ~sum;
-	return result;
-	
-	//sender can put this value into the checksum field
-}
-*/
-
-//used to prep socket address struct for more uses(store data for later)
-struct addrinfo
-{
-	int              ai_flags;     // AI_PASSIVE, AI_CANONNAME (address flags)
-	int              ai_family;    // AF_INET, AF_INET6, AF_UNSPEC (defined socket family)
-	int              ai_socktype;  // SOCK_STREAM, SOCK_DGRAM (TCP, UDP)
-	int              ai_protocol;  // use 0 for "any"
-	size_t           ai_addrlen;   // size of ai_addr in bytes
-	struct sockaddr *ai_addr;      // struct sockaddr_in or _in6
-	char            *ai_canonname; // full canonical hostname
-	
-	struct addrinfo *ai_next;      // linked list, next node
 };
 
-//struct for IPv4 --- ipV6 will be added soon
-typedef struct ipv4Hdr
-{
-	unsigned int h_len; //length for header
-	unsigned int version; //version of IP(ipV4)
-	unsigned char tos; //type of service
-	unsigned short total_len; //total length of packet
-	unsigned short id; //unique identifier
-	unsigned short frag_flags; //flags that are set
-	unsigned ttl; //time-to-live
-	unsigned proto; //packets protocol (TCP, UDP, etc)
-	unsigned short cheksum; //checksum of IP
+struct icmp_hdr {
 
-	unsigned int sourceIP; //IP packet is being sent from
-	unsigned int destIP; //IP packet is being sent to
-} ipv4Header;
+};
+
+//returns 1 on valid, 0 on failure
+int validateCheck(int *data, int len)
+{
+	int bitsLeft = len;
+	int sum = 0;
+	return 0;
+}
 
 //used when default "curl http://etc.com" is called by terminal
 void printURL(char *url)
