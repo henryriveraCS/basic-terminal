@@ -24,6 +24,8 @@ SECTION A:
 		https://www.reddit.com/r/learnprogramming/comments/6vyoxj/can_someone_explain_this_definition_c/
 		https://www.eso.org/~ndelmott/ascii.html
 		https://unix.stackexchange.com/questions/138342/how-to-read-write-to-tty-device
+		https://stackoverflow.com/questions/14626395/how-to-properly-convert-a-c-ioctl-call-to-a-python-fcntl-ioctl-call
+		https://www.generacodice.com/en/articolo/263498/simulate-keypress-in-a-linux-c-console-application
 
 	4. PERMISSION BITS FOR CREATING FOLDERS/FILES/DIRECTORIES:
 		https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
@@ -47,7 +49,10 @@ SECTION A:
 		https://beej.us/guide/bgnet/
 		https://www.geeksforgeeks.org/ping-in-c/
 		http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
+		https://www.alpharithms.com/internet-checksum-calculation-steps-044921/
 		https://datatracker.ietf.org/doc/html/rfc1122	
+		https://inc0x0.com/icmp-ip-packets-ping-manually-create-and-send-icmp-ip-packets/
+		https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
 
 	7. STRINGS
 		https://embeddedartistry.com/blog/2017/07/05/printf-a-limited-number-of-characters-from-a-string/
