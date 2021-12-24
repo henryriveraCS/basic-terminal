@@ -1,6 +1,6 @@
 <h1> basic-terminal </h1>
 
-<b> Terminal written in C that can run on UNIX machines. It's basically a more minimal(*buggy*) version of your default terminal :D </b>
+<b> Terminal written in C that can run on UNIX machines. It's basically a more minimal(*buggy*) version of your existing unix terminal.</b>
 
 <h2>Dependancies</h2>
 <p>Make sure you have the following installed (more might be added as more networking features are added.</p>
